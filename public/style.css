@@ -1,0 +1,293 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  display:flex;
+  justify-content:center;
+  padding:20px;
+  transition:0.4s;
+}
+
+/* DARK MODE */
+
+body.dark{
+  background:#111;
+}
+
+body.dark .dashboard{
+  background:#1a1a1a;
+}
+
+body.dark .form-container,
+body.dark .client-card{
+  background:#222;
+}
+
+/* MAIN CONTAINER */
+
+.dashboard{
+  width:100%;
+  max-width:1000px;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(25px);
+  border-radius:25px;
+  padding:30px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  animation:fadeUp 0.8s ease;
+}
+
+/* HEADER */
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+}
+
+.header h1{
+  color:#fff;
+  font-size:24px;
+  font-weight:700;
+}
+
+.logout-btn{
+  padding:8px 18px;
+  border:none;
+  border-radius:20px;
+  background:#ff1744;
+  color:#fff;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.logout-btn:hover{
+  transform:scale(1.05);
+}
+
+/* DARK MODE FLOAT BUTTON */
+
+.theme-btn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  padding:14px;
+  border-radius:50%;
+  border:none;
+  background:#000;
+  color:#fff;
+  font-size:18px;
+  cursor:pointer;
+  box-shadow:0 5px 20px rgba(0,0,0,0.4);
+}
+
+/* STATS */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:15px;
+  margin-bottom:35px;
+}
+
+.stat-card{
+  padding:20px;
+  border-radius:16px;
+  color:#fff;
+  text-align:center;
+  font-weight:600;
+  transition:0.3s;
+}
+
+.stat-card span{
+  display:block;
+  font-size:22px;
+  margin-top:6px;
+}
+
+.stat-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+.total{background:linear-gradient(45deg,#00c6ff,#0072ff);}
+.paid-stat{background:linear-gradient(45deg,#00b09b,#96c93d);}
+.unpaid-stat{background:linear-gradient(45deg,#f7971e,#ffd200);}
+.expired-stat{background:linear-gradient(45deg,#ff5f6d,#ffc371);}
+
+/* FORM */
+
+.form-container{
+  background:rgba(255,255,255,0.08);
+  padding:25px;
+  border-radius:18px;
+  margin-bottom:40px;
+}
+
+.form-container h2{
+  text-align:center;
+  color:#fff;
+  margin-bottom:20px;
+}
+
+.form-container input{
+  width:100%;
+  padding:14px;
+  margin-bottom:15px;
+  border:none;
+  border-radius:12px;
+  font-size:14px;
+  outline:none;
+  transition:0.3s;
+}
+
+.form-container input:focus{
+  box-shadow:0 0 12px #00f2fe;
+  transform:scale(1.02);
+}
+
+.add-client{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#396afc,#2948ff);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.add-client:hover{
+  transform:scale(1.05);
+}
+
+/* CAMERA */
+
+.camera-section{
+  margin:15px 0;
+  text-align:center;
+}
+
+.camera-btn{
+  display:block;
+  padding:14px;
+  background:linear-gradient(45deg,#ff512f,#dd2476);
+  color:white;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.camera-btn:active{
+  transform:scale(0.95);
+}
+
+.preview-img{
+  width:100%;
+  max-width:200px;
+  margin-top:10px;
+  border-radius:10px;
+  display:none;
+}
+
+/* CLIENT LIST */
+
+.client-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:20px;
+}
+
+.client-card{
+  background:rgba(255,255,255,0.1);
+  border-radius:18px;
+  padding:15px;
+  color:#fff;
+  transition:0.3s;
+}
+
+.client-card:hover{
+  transform:translateY(-6px);
+}
+
+.client-img{
+  width:100%;
+  height:170px;
+  object-fit:cover;
+  border-radius:12px;
+  margin-bottom:10px;
+}
+
+.client-info{
+  font-size:14px;
+  line-height:1.6;
+}
+
+.status-badge{
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+  margin-top:6px;
+  font-weight:600;
+}
+
+.badge-paid{background:#00c853;}
+.badge-unpaid{background:#ff1744;}
+.badge-expired{background:#ff6f00;}
+
+/* CARD BUTTONS */
+
+.card-buttons{
+  margin-top:10px;
+  display:flex;
+  gap:10px;
+}
+
+.toggle-btn,
+.renew-btn{
+  flex:1;
+  padding:8px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:600;
+}
+
+.toggle-btn{
+  background:#ffd600;
+}
+
+.renew-btn{
+  background:#00c853;
+  color:#fff;
+}
+
+/* ANIMATION */
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(40px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* RESPONSIVE DESKTOP */
+
+@media(min-width:768px){
+  .client-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+.delete-btn{
+  background:#ff1744;
+  color:white;
+}

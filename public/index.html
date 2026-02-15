@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gym Management Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- HEADER -->
+    <header class="header">
+        <h1>🏆 Gym Management Pro</h1>
+
+        <!-- Logout Button -->
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+    </header>
+
+
+    <!-- STATS -->
+    <section class="stats">
+        <div class="stat-card total">
+            Total
+            <span id="totalCount">0</span>
+        </div>
+
+       <div class="stat-card paid-stat">
+
+            Paid
+            <span id="paidCount">0</span>
+        </div>
+
+        <div class="stat-card unpaid-stat">
+            Unpaid
+            <span id="unpaidCount">0</span>
+        </div>
+
+        <div class="stat-card expired-stat">
+            Expired
+            <span id="expiredCount">0</span>
+        </div>
+    </section>
+
+
+    <!-- ADD CLIENT -->
+    <section class="form-container">
+        <h2>Add Client</h2>
+
+        <input type="text" id="name" placeholder="Enter Name">
+        <input type="text" id="phone" placeholder="Enter Phone">
+        <input type="date" id="joinDate">
+
+        <!-- CAMERA SECTION -->
+        <div class="camera-section">
+            <label class="camera-btn">
+                📸 Take Photo
+                <input type="file" id="photoInput" accept="image/*" capture="environment" hidden>
+            </label>
+            <img id="preview" class="preview-img">
+        </div>
+
+        <button class="add-client" id="addClientBtn">Add Client</button>
+    </section>
+
+
+    <!-- CLIENT LIST -->
+    <section class="client-list-section">
+        <h2>Client List</h2>
+        <div id="clientGrid" class="client-grid"></div>
+    </section>
+
+</div>
+
+<!-- DARK MODE FLOAT BUTTON -->
+<button id="themeToggle" class="theme-btn">🌙</button>
+
+<script src="script.js"></script>
+
+</body>
+</html>
