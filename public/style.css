@@ -7,38 +7,22 @@
 
 body{
   min-height:100vh;
-  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  background:#0d0d0d;
   display:flex;
   justify-content:center;
   padding:20px;
-  transition:0.4s;
-}
-
-/* DARK MODE */
-
-body.dark{
-  background:#111;
-}
-
-body.dark .dashboard{
-  background:#1a1a1a;
-}
-
-body.dark .form-container,
-body.dark .client-card{
-  background:#222;
+  color:#fff;
 }
 
 /* MAIN CONTAINER */
 
 .dashboard{
   width:100%;
-  max-width:1000px;
-  background:rgba(255,255,255,0.06);
-  backdrop-filter:blur(25px);
+  max-width:1100px;
+  background:rgba(20,20,20,0.95);
   border-radius:25px;
   padding:30px;
-  box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  box-shadow:0 0 60px rgba(0,255,120,0.08);
   animation:fadeUp 0.8s ease;
 }
 
@@ -52,39 +36,26 @@ body.dark .client-card{
 }
 
 .header h1{
-  color:#fff;
-  font-size:24px;
+  font-size:26px;
   font-weight:700;
+  letter-spacing:1px;
+  color:#00ff88;
 }
 
 .logout-btn{
-  padding:8px 18px;
+  padding:10px 22px;
   border:none;
-  border-radius:20px;
-  background:#ff1744;
+  border-radius:30px;
+  background:linear-gradient(45deg,#ff1744,#ff5252);
   color:#fff;
   cursor:pointer;
+  font-weight:600;
   transition:0.3s;
 }
 
 .logout-btn:hover{
-  transform:scale(1.05);
-}
-
-/* DARK MODE FLOAT BUTTON */
-
-.theme-btn{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  padding:14px;
-  border-radius:50%;
-  border:none;
-  background:#000;
-  color:#fff;
-  font-size:18px;
-  cursor:pointer;
-  box-shadow:0 5px 20px rgba(0,0,0,0.4);
+  transform:scale(1.08);
+  box-shadow:0 0 15px #ff1744;
 }
 
 /* STATS */
@@ -92,110 +63,98 @@ body.dark .client-card{
 .stats{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-  gap:15px;
+  gap:20px;
   margin-bottom:35px;
 }
 
 .stat-card{
-  padding:20px;
-  border-radius:16px;
-  color:#fff;
+  padding:25px;
+  border-radius:18px;
+  background:#151515;
   text-align:center;
-  font-weight:600;
   transition:0.3s;
+  border:1px solid rgba(0,255,120,0.2);
 }
 
 .stat-card span{
   display:block;
-  font-size:22px;
-  margin-top:6px;
+  font-size:26px;
+  margin-top:8px;
+  font-weight:bold;
+  color:#00ff88;
 }
 
 .stat-card:hover{
   transform:translateY(-6px);
-  box-shadow:0 10px 25px rgba(0,0,0,0.3);
+  box-shadow:0 0 20px rgba(0,255,120,0.3);
 }
-
-.total{background:linear-gradient(45deg,#00c6ff,#0072ff);}
-.paid-stat{background:linear-gradient(45deg,#00b09b,#96c93d);}
-.unpaid-stat{background:linear-gradient(45deg,#f7971e,#ffd200);}
-.expired-stat{background:linear-gradient(45deg,#ff5f6d,#ffc371);}
 
 /* FORM */
 
 .form-container{
-  background:rgba(255,255,255,0.08);
-  padding:25px;
-  border-radius:18px;
+  background:#151515;
+  padding:30px;
+  border-radius:20px;
   margin-bottom:40px;
+  border:1px solid rgba(0,255,120,0.2);
 }
 
 .form-container h2{
   text-align:center;
-  color:#fff;
-  margin-bottom:20px;
+  margin-bottom:25px;
+  color:#00ff88;
 }
 
 .form-container input{
   width:100%;
-  padding:14px;
-  margin-bottom:15px;
-  border:none;
+  padding:15px;
+  margin-bottom:18px;
+  border:1px solid #333;
   border-radius:12px;
+  background:#0f0f0f;
+  color:#fff;
   font-size:14px;
-  outline:none;
   transition:0.3s;
 }
 
 .form-container input:focus{
-  box-shadow:0 0 12px #00f2fe;
-  transform:scale(1.02);
+  border-color:#00ff88;
+  box-shadow:0 0 10px rgba(0,255,120,0.4);
 }
 
 .add-client{
   width:100%;
-  padding:14px;
+  padding:15px;
   border:none;
   border-radius:30px;
-  background:linear-gradient(45deg,#396afc,#2948ff);
-  color:#fff;
-  font-weight:600;
+  background:linear-gradient(45deg,#00ff88,#00c853);
+  color:#000;
+  font-weight:700;
   cursor:pointer;
   transition:0.3s;
 }
 
 .add-client:hover{
   transform:scale(1.05);
+  box-shadow:0 0 20px #00ff88;
 }
 
 /* CAMERA */
-
-.camera-section{
-  margin:15px 0;
-  text-align:center;
-}
 
 .camera-btn{
   display:block;
   padding:14px;
   background:linear-gradient(45deg,#ff512f,#dd2476);
   color:white;
-  border-radius:10px;
+  border-radius:12px;
   font-weight:bold;
   cursor:pointer;
   transition:0.3s;
+  margin-bottom:15px;
 }
 
-.camera-btn:active{
-  transform:scale(0.95);
-}
-
-.preview-img{
-  width:100%;
-  max-width:200px;
-  margin-top:10px;
-  border-radius:10px;
-  display:none;
+.camera-btn:hover{
+  box-shadow:0 0 15px #ff1744;
 }
 
 /* CLIENT LIST */
@@ -203,40 +162,41 @@ body.dark .client-card{
 .client-grid{
   display:grid;
   grid-template-columns:1fr;
-  gap:20px;
+  gap:25px;
 }
 
 .client-card{
-  background:rgba(255,255,255,0.1);
-  border-radius:18px;
-  padding:15px;
-  color:#fff;
+  background:#151515;
+  border-radius:20px;
+  padding:18px;
   transition:0.3s;
+  border:1px solid rgba(0,255,120,0.15);
 }
 
 .client-card:hover{
-  transform:translateY(-6px);
+  transform:translateY(-8px);
+  box-shadow:0 0 25px rgba(0,255,120,0.25);
 }
 
 .client-img{
   width:100%;
-  height:170px;
+  height:180px;
   object-fit:cover;
-  border-radius:12px;
-  margin-bottom:10px;
+  border-radius:14px;
+  margin-bottom:12px;
 }
 
 .client-info{
   font-size:14px;
-  line-height:1.6;
+  line-height:1.7;
 }
 
 .status-badge{
   display:inline-block;
-  padding:6px 12px;
+  padding:6px 14px;
   border-radius:20px;
   font-size:12px;
-  margin-top:6px;
+  margin-top:8px;
   font-weight:600;
 }
 
@@ -244,23 +204,25 @@ body.dark .client-card{
 .badge-unpaid{background:#ff1744;}
 .badge-expired{background:#ff6f00;}
 
-/* CARD BUTTONS */
+/* BUTTONS */
 
 .card-buttons{
-  margin-top:10px;
+  margin-top:15px;
   display:flex;
   gap:10px;
 }
 
 .toggle-btn,
-.renew-btn{
+.renew-btn,
+.delete-btn{
   flex:1;
-  padding:8px;
+  padding:10px;
   border:none;
   border-radius:10px;
   cursor:pointer;
   font-size:13px;
   font-weight:600;
+  transition:0.3s;
 }
 
 .toggle-btn{
@@ -269,17 +231,21 @@ body.dark .client-card{
 
 .renew-btn{
   background:#00c853;
-  color:#fff;
+  color:#000;
 }
 
-/* ANIMATION */
-
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(40px);}
-  to{opacity:1;transform:translateY(0);}
+.delete-btn{
+  background:#ff1744;
+  color:white;
 }
 
-/* RESPONSIVE DESKTOP */
+.toggle-btn:hover,
+.renew-btn:hover,
+.delete-btn:hover{
+  transform:scale(1.07);
+}
+
+/* RESPONSIVE */
 
 @media(min-width:768px){
   .client-grid{
@@ -287,7 +253,9 @@ body.dark .client-card{
   }
 }
 
-.delete-btn{
-  background:#ff1744;
-  color:white;
+/* ANIMATION */
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(40px);}
+  to{opacity:1;transform:translateY(0);}
 }
