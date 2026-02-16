@@ -11,10 +11,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cloudinary": "^1.41.3",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
     "mongoose": "^9.2.1",
-    "multer": "^2.0.2"
+    "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0"
   }
 }

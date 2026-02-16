@@ -4,8 +4,29 @@ const cors = require("cors")
 const multer = require("multer")
 const session = require("express-session")
 const path = require("path")
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const multer = require("multer");
+
 
 const app = express()
+
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
+});
+
+const storageS = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "gym_clients",
+    allowed_formats: ["jpg", "png", "jpeg"]
+  }
+});
+
+const uploadS = multer({ storage: storage });
 
 /* ---------------- MIDDLEWARE ---------------- */
 
@@ -94,32 +115,24 @@ app.get("/logout", (req, res) => {
 })
 
 /* ---------------- ADD CLIENT ---------------- */
-
-app.post("/add-client", isAuthenticated, upload.single("photo"), async (req, res) => {
+app.post("/add-client", upload.single("photo"), async (req, res) => {
   try {
-    const joinDate = new Date(req.body.joinDate)
-
-    const expiryDate = new Date(joinDate)
-    expiryDate.setMonth(expiryDate.getMonth() + 1)
-
     const newClient = new Client({
       name: req.body.name,
       phone: req.body.phone,
       joinDate: req.body.joinDate,
-      expiryDate: expiryDate.toISOString().split("T")[0],
-      lastVisit: req.body.joinDate,
-      photo: req.file ? req.file.filename : "",
-      feeStatus: "Unpaid"
-    })
+      photo: req.file ? req.file.path : ""
+    });
 
-    await newClient.save()
+    await newClient.save();
+    res.status(201).json({ success: true });
 
-    res.status(201).json({ message: "Client Added Successfully" })
-
-  } catch (error) {
-    res.status(500).json({ message: "Error Adding Client" })
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Failed to add client" });
   }
-})
+});
+
 
 /* ---------------- GET CLIENTS ---------------- */
 
