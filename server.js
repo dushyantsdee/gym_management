@@ -213,6 +213,15 @@ app.get("/", (req, res) => {
   }
 });
 
+app.get("/login", (req, res) => {
+  res.sendFile(__dirname + "/public/login.html");
+});
+
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/login.html");
+});
+
+
 /* ---------------- START SERVER ---------------- */
 
 const PORT = process.env.PORT || 5000;
