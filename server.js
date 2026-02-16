@@ -40,7 +40,7 @@ app.use(session({
   cookie: { secure: false }
 }));
 
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 
 /* ---------------- DATABASE ---------------- */
 
@@ -73,10 +73,20 @@ const Client = mongoose.model("Client", clientSchema);
 
 function isAuthenticated(req, res, next) {
   if (!req.session.user) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.redirect("/");
   }
   next();
 }
+
+/* ---------------- ROUTES ---------------- */
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "login.html"));
+});
+
+app.get("/dashboard", isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 /* ---------------- LOGIN ---------------- */
 
@@ -123,100 +133,9 @@ app.post("/add-client", upload.single("photo"), async (req, res) => {
 /* ---------------- GET CLIENTS ---------------- */
 
 app.get("/clients", isAuthenticated, async (req, res) => {
-  try {
-    const clients = await Client.find().sort({ joinDate: -1 });
-    res.json(clients);
-  } catch (error) {
-    res.status(500).json({ message: "Error Fetching Clients" });
-  }
+  const clients = await Client.find().sort({ joinDate: -1 });
+  res.json(clients);
 });
-
-/* ---------------- UPDATE VISIT ---------------- */
-
-app.put("/update-visit/:id", isAuthenticated, async (req, res) => {
-  try {
-    const today = new Date().toISOString().split("T")[0];
-
-    await Client.findByIdAndUpdate(req.params.id, {
-      lastVisit: today
-    });
-
-    res.json({ message: "Visit Updated" });
-  } catch (error) {
-    res.status(500).json({ message: "Error Updating Visit" });
-  }
-});
-
-/* ---------------- TOGGLE FEE ---------------- */
-
-app.put("/toggle-fee/:id", isAuthenticated, async (req, res) => {
-  try {
-    const client = await Client.findById(req.params.id);
-
-    const newStatus = client.feeStatus === "Paid" ? "Unpaid" : "Paid";
-
-    await Client.findByIdAndUpdate(req.params.id, {
-      feeStatus: newStatus
-    });
-
-    res.json({ message: "Fee Status Updated" });
-  } catch (error) {
-    res.status(500).json({ message: "Error Updating Fee Status" });
-  }
-});
-
-/* ---------------- RENEW MEMBERSHIP ---------------- */
-
-app.put("/renew/:id", isAuthenticated, async (req, res) => {
-  try {
-    const client = await Client.findById(req.params.id);
-
-    const today = new Date();
-    let baseDate = new Date(client.expiryDate);
-
-    if (baseDate < today) {
-      baseDate = today;
-    }
-
-    baseDate.setMonth(baseDate.getMonth() + 1);
-
-    await Client.findByIdAndUpdate(req.params.id, {
-      expiryDate: baseDate.toISOString().split("T")[0],
-      feeStatus: "Paid"
-    });
-
-    res.json({ message: "Membership Renewed" });
-
-  } catch (error) {
-    res.status(500).json({ message: "Error Renewing Membership" });
-  }
-});
-
-/* ---------------- DELETE CLIENT ---------------- */
-
-app.delete("/delete-client/:id", isAuthenticated, async (req, res) => {
-  try {
-    await Client.findByIdAndDelete(req.params.id);
-    res.json({ message: "Client Deleted" });
-  } catch (error) {
-    res.status(500).json({ message: "Error Deleting Client" });
-  }
-});
-
-/* ---------------- HOME ROUTE ---------------- */
-
-app.get("/", (req, res) => {
-  if (!req.session.user) {
-    res.sendFile(path.join(__dirname, "public/login.html"));
-  } else {
-    res.sendFile(path.join(__dirname, "public/index.html"));
-  }
-});
-
-app.get("/login", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/login.html"));
-});
-
 
 /* ---------------- START SERVER ---------------- */
 
