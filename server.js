@@ -14,28 +14,29 @@ require("dotenv").config();
 
 const app = express();
 
-// Express app create karne ke baad, immediately yeh add karo:
+// Trust proxy for Render
 app.set('trust proxy', 1);
 
 /* ---------------- SECURITY MIDDLEWARE ---------------- */
 
-// Helmet for security headers
+// Helmet with relaxed CSP for dashboard
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"], // ✅ Fonts add karo
-      scriptSrc: ["'self'", "'unsafe-inline'"],  // ✅ Inline scripts allow karo
-      imgSrc: ["'self'", "data:", "https:", "http:", "blob:"],  // ✅ blob: add karo
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],  // ✅ Fonts
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdnjs.cloudflare.com"],
+      imgSrc: ["'self'", "data:", "https:", "http:", "blob:", "https://res.cloudinary.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+      connectSrc: ["'self'"],
     },
   },
 }));
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message: "Too many requests from this IP, please try again later."
 });
 app.use("/api/", limiter);
@@ -67,7 +68,7 @@ const storage = new CloudinaryStorage({
 const upload = multer({ 
   storage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
+    fileSize: 5 * 1024 * 1024
   },
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {
@@ -89,21 +90,24 @@ app.use(cors({
   credentials: true
 }));
 
-// Session configuration with MongoDB store
+// Session configuration - FIXED
 app.use(session({
   secret: process.env.SESSION_SECRET || "fallback_secret_change_this",
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: process.env.MONGO_URI  // MongoDB mein session store karo
+    mongoUrl: process.env.MONGO_URI,
+    touchAfter: 24 * 3600
   }),
-  cookie: { 
-    secure: process.env.NODE_ENV === 'production' && req.secure, // ✅ Better check
-    httpOnly: true,
-    sameSite: 'lax',  // ✅ Add this
-    maxAge: 24 * 60 * 60 * 1000
-  }
+ // Line ~85 ke aas paas
+cookie: { 
+  secure: false,  // ✅ true ki jagah false (kyunki Render pe HTTPS issue ho sakta hai)
+  httpOnly: true,
+  sameSite: 'lax',
+  maxAge: 24 * 60 * 60 * 1000
+}
 }));
+
 app.use(express.static(path.join(__dirname, "public")));
 
 /* ---------------- DATABASE CONNECTION ---------------- */
@@ -120,22 +124,20 @@ const connectDB = async () => {
 
 connectDB();
 
-connectDB();
-
 /* ---------------- OWNER LOGIN (SECURE) ---------------- */
 
-// In production, store hashed password in database
 let OWNER = {
   username: process.env.ADMIN_USERNAME || "admin",
-  password: process.env.ADMIN_PASSWORD || "1234"
+  password: process.env.ADMIN_PASSWORD || "$2a$10$YourHashedPasswordHere" // bcrypt hash
 };
-// Hash password function for initial setup
+
+// Hash password helper
 const hashPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
   return await bcrypt.hash(password, salt);
 };
 
-/* ---------------- SCHEMAS WITH VALIDATION ---------------- */
+/* ---------------- SCHEMAS ---------------- */
 
 const clientSchema = new mongoose.Schema({
   name: {
@@ -178,7 +180,6 @@ const clientSchema = new mongoose.Schema({
   }
 });
 
-// Index for faster queries
 clientSchema.index({ name: 'text', phone: 'text' });
 clientSchema.index({ expiryDate: 1 });
 
@@ -204,7 +205,7 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Login page
+// Root route - Login page
 app.get("/", (req, res) => {
   if (req.session.user) {
     return res.redirect("/dashboard");
@@ -223,7 +224,6 @@ app.post("/api/login", loginLimiter, async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Validation
     if (!username || !password) {
       return res.status(400).json({ 
         success: false, 
@@ -231,7 +231,6 @@ app.post("/api/login", loginLimiter, async (req, res) => {
       });
     }
 
-    // Check credentials
     if (username !== OWNER.username) {
       return res.status(401).json({ 
         success: false, 
@@ -239,13 +238,15 @@ app.post("/api/login", loginLimiter, async (req, res) => {
       });
     }
 
-    // Compare password (use bcrypt in production)
-    const isMatch = await bcrypt.compare(password, OWNER.password);
-    
-    // For demo without bcrypt
-    const isMatchDemo = password === "1234"; // Remove this in production
+    // Check if password is hashed or plain
+    let isMatch = false;
+    if (OWNER.password.startsWith('$2')) {
+      isMatch = await bcrypt.compare(password, OWNER.password);
+    } else {
+      isMatch = password === OWNER.password;
+    }
 
-    if (isMatch || isMatchDemo) {
+    if (isMatch) {
       req.session.user = username;
       return res.json({ 
         success: true, 
@@ -294,9 +295,7 @@ app.post("/api/clients", isAuthenticated, upload.single("photo"), async (req, re
   try {
     const { name, phone, joinDate, expiryDate, feeStatus } = req.body;
 
-    // Validation
     if (!name || !phone || !joinDate || !expiryDate) {
-      // Delete uploaded file if validation fails
       if (req.file) {
         await cloudinary.uploader.destroy(req.file.filename);
       }
@@ -306,7 +305,6 @@ app.post("/api/clients", isAuthenticated, upload.single("photo"), async (req, re
       });
     }
 
-    // Check for duplicate phone
     const existingClient = await Client.findOne({ phone });
     if (existingClient) {
       if (req.file) {
@@ -347,7 +345,7 @@ app.post("/api/clients", isAuthenticated, upload.single("photo"), async (req, re
   }
 });
 
-// Get all clients with pagination and search
+// Get all clients
 app.get("/api/clients", isAuthenticated, async (req, res) => {
   try {
     const { 
@@ -361,7 +359,6 @@ app.get("/api/clients", isAuthenticated, async (req, res) => {
 
     const query = {};
     
-    // Search functionality
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: 'i' } },
@@ -369,12 +366,10 @@ app.get("/api/clients", isAuthenticated, async (req, res) => {
       ];
     }
 
-    // Filter by fee status
     if (feeStatus) {
       query.feeStatus = feeStatus;
     }
 
-    // Sorting
     const sortOptions = {};
     sortOptions[sortBy] = order === 'desc' ? -1 : 1;
 
@@ -442,7 +437,6 @@ app.put("/api/clients/:id", isAuthenticated, upload.single("photo"), async (req,
       });
     }
 
-    // Check phone uniqueness if changed
     if (phone && phone !== client.phone) {
       const existingClient = await Client.findOne({ phone });
       if (existingClient) {
@@ -456,13 +450,11 @@ app.put("/api/clients/:id", isAuthenticated, upload.single("photo"), async (req,
       }
     }
 
-    // Delete old photo if new one uploaded
     if (req.file && client.photo) {
       const publicId = client.photo.split('/').pop().split('.')[0];
       await cloudinary.uploader.destroy(publicId);
     }
 
-    // Update fields
     if (name) client.name = name.trim();
     if (phone) client.phone = phone.trim();
     if (joinDate) client.joinDate = new Date(joinDate);
@@ -503,7 +495,6 @@ app.delete("/api/clients/:id", isAuthenticated, async (req, res) => {
       });
     }
 
-    // Delete photo from Cloudinary
     if (client.photo) {
       const publicId = client.photo.split('/').pop().split('.')[0];
       await cloudinary.uploader.destroy(publicId);
@@ -525,9 +516,7 @@ app.delete("/api/clients/:id", isAuthenticated, async (req, res) => {
   }
 });
 
-
-/* ---------------- TOGGLE FEE STATUS ---------------- */
-
+// Toggle fee status
 app.put("/api/clients/:id/toggle-fee", isAuthenticated, async (req, res) => {
   try {
     const client = await Client.findById(req.params.id);
@@ -539,7 +528,6 @@ app.put("/api/clients/:id/toggle-fee", isAuthenticated, async (req, res) => {
       });
     }
     
-    // Toggle fee status
     client.feeStatus = client.feeStatus === "Paid" ? "Unpaid" : "Paid";
     await client.save();
     
@@ -558,8 +546,7 @@ app.put("/api/clients/:id/toggle-fee", isAuthenticated, async (req, res) => {
   }
 });
 
-/* ---------------- RENEW MEMBERSHIP ---------------- */
-
+// Renew membership
 app.put("/api/clients/:id/renew", isAuthenticated, async (req, res) => {
   try {
     const { months } = req.body;
@@ -580,16 +567,13 @@ app.put("/api/clients/:id/renew", isAuthenticated, async (req, res) => {
       });
     }
     
-    // Calculate new expiry date
     const currentExpiry = new Date(client.expiryDate);
     const today = new Date();
     
-    // If already expired, start from today, else extend from current expiry
     const baseDate = currentExpiry > today ? currentExpiry : today;
     const newExpiry = new Date(baseDate);
     newExpiry.setMonth(newExpiry.getMonth() + parseInt(months));
     
-    // Update client
     client.expiryDate = newExpiry;
     client.feeStatus = "Paid";
     await client.save();
@@ -608,6 +592,7 @@ app.put("/api/clients/:id/renew", isAuthenticated, async (req, res) => {
     });
   }
 });
+
 // Get dashboard stats
 app.get("/api/stats", isAuthenticated, async (req, res) => {
   try {
@@ -620,7 +605,6 @@ app.get("/api/stats", isAuthenticated, async (req, res) => {
     });
     const unpaidClients = await Client.countDocuments({ feeStatus: "Unpaid" });
 
-    // Clients expiring this week
     const nextWeek = new Date();
     nextWeek.setDate(nextWeek.getDate() + 7);
     const expiringThisWeek = await Client.countDocuments({
@@ -684,6 +668,4 @@ app.listen(PORT, () => {
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
   console.error("Unhandled Rejection:", err.message);
-  // Close server & exit process
-  // server.close(() => process.exit(1));
 });
