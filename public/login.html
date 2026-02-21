@@ -1,78 +1,424 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Gym Owner Login</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gym Pro Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
     body {
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      height:100vh;
-      background:linear-gradient(135deg,#141e30,#243b55);
-      font-family:Arial;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated Background */
+    .bg-shapes {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .shape {
+      position: absolute;
+      filter: blur(50px);
+      opacity: 0.6;
+      animation: float 20s infinite;
+    }
+
+    .shape-1 {
+      width: 400px;
+      height: 400px;
+      background: #f093fb;
+      border-radius: 50%;
+      top: -100px;
+      left: -100px;
+      animation-delay: 0s;
+    }
+
+    .shape-2 {
+      width: 300px;
+      height: 300px;
+      background: #4facfe;
+      border-radius: 50%;
+      bottom: -50px;
+      right: -50px;
+      animation-delay: 5s;
+    }
+
+    .shape-3 {
+      width: 200px;
+      height: 200px;
+      background: #43e97b;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      animation-delay: 10s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+    }
+
+    /* Login Container */
+    .login-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
     }
 
     .login-box {
-      background:rgba(255,255,255,0.1);
-      padding:30px;
-      border-radius:15px;
-      backdrop-filter:blur(10px);
-      text-align:center;
-      color:white;
-      width:300px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      animation: slideUp 0.6s ease;
     }
 
-    input {
-      width:100%;
-      padding:10px;
-      margin:10px 0;
-      border-radius:6px;
-      border:none;
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    button {
-      width:100%;
-      padding:10px;
-      border:none;
-      border-radius:6px;
-      background:#00c853;
-      color:white;
-      font-weight:bold;
-      cursor:pointer;
+    /* Logo Section */
+    .logo-section {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 36px;
+      color: white;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .logo-section h1 {
+      color: white;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .logo-section p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+    }
+
+    /* Input Groups */
+    .input-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .input-group label {
+      display: block;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 16px;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 14px 16px 14px 48px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      font-size: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .input-wrapper input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .input-wrapper input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+      color: white;
+    }
+
+    /* Login Button */
+    .login-btn {
+      width: 100%;
+      padding: 16px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .login-btn:hover::before {
+      left: 100%;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .login-btn.loading {
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+    .login-btn.loading::after {
+      content: '';
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Error Message */
+    .error-message {
+      background: rgba(255, 23, 68, 0.1);
+      border: 1px solid rgba(255, 23, 68, 0.3);
+      color: #ff1744;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-top: 15px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .error-message.show {
+      display: flex;
+      animation: shake 0.5s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    /* Footer */
+    .login-footer {
+      text-align: center;
+      margin-top: 25px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .login-box {
+        padding: 30px 20px;
+      }
+      
+      .logo-section h1 {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
 <body>
 
-<div class="login-box">
-  <h2>Gym Owner Login</h2>
-  <input type="text" id="username" placeholder="Username">
-  <input type="password" id="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-  <p id="error" style="color:red;"></p>
-</div>
+  <div class="bg-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
 
-<script>
-async function login() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+  <div class="login-container">
+    <div class="login-box">
+      <div class="logo-section">
+        <div class="logo">
+          <i class="fas fa-dumbbell"></i>
+        </div>
+        <h1>Gym Pro</h1>
+        <p>Management System</p>
+      </div>
 
-  const res = await fetch("/login", {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({ username, password })
-  });
+      <form id="loginForm">
+        <div class="input-group">
+          <label>Username</label>
+          <div class="input-wrapper">
+            <i class="fas fa-user"></i>
+            <input type="text" id="username" placeholder="Enter username" required>
+          </div>
+        </div>
 
-  const data = await res.json();
+        <div class="input-group">
+          <label>Password</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" placeholder="Enter password" required>
+            <i class="fas fa-eye toggle-password" onclick="togglePassword()"></i>
+          </div>
+        </div>
 
-  if (data.success) {
-    window.location.href = "/dashboard";
-  } else {
-    document.getElementById("error").textContent = "Invalid Credentials";
-  }
-}
-</script>
+        <button type="submit" class="login-btn" id="loginBtn">
+          Sign In
+        </button>
+      </form>
+
+      <div class="error-message" id="errorMsg">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorText">Invalid credentials</span>
+      </div>
+
+      <div class="login-footer">
+        © 2024 Gym Pro. All rights reserved.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle Password Visibility
+    function togglePassword() {
+      const password = document.getElementById('password');
+      const toggle = document.querySelector('.toggle-password');
+      
+      if (password.type === 'password') {
+        password.type = 'text';
+        toggle.classList.remove('fa-eye');
+        toggle.classList.add('fa-eye-slash');
+      } else {
+        password.type = 'password';
+        toggle.classList.remove('fa-eye-slash');
+        toggle.classList.add('fa-eye');
+      }
+    }
+
+    // Login Handler
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const btn = document.getElementById('loginBtn');
+      const errorMsg = document.getElementById('errorMsg');
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      
+      // Show loading
+      btn.classList.add('loading');
+      btn.innerHTML = 'Signing In...';
+      errorMsg.classList.remove('show');
+      
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+          btn.innerHTML = 'Success!';
+          btn.style.background = 'linear-gradient(135deg, #00b09b 0%, #96c93d 100%)';
+          setTimeout(() => {
+            window.location.href = '/dashboard';
+          }, 500);
+        } else {
+          throw new Error(data.message || 'Invalid credentials');
+        }
+      } catch (err) {
+        btn.classList.remove('loading');
+        btn.innerHTML = 'Sign In';
+        document.getElementById('errorText').textContent = err.message;
+        errorMsg.classList.add('show');
+      }
+    });
+  </script>
 
 </body>
 </html>

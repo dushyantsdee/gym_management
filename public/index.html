@@ -2,83 +2,279 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Gym Management Pro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Pro Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
-<div class="dashboard">
-
-    <!-- HEADER -->
-    <header class="header">
-        <h1>🏆 Gym Management Pro</h1>
-
-        <!-- Logout Button -->
-        <button id="logoutBtn" class="logout-btn">Logout</button>
-    </header>
-
-
-    <!-- STATS -->
-    <section class="stats">
-        <div class="stat-card total">
-            Total
-            <span id="totalCount">0</span>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-dumbbell"></i>
+                <span>Gym Pro</span>
+            </div>
+            <button class="close-sidebar" id="closeSidebar">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
+        
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#clients" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Clients</span>
+            </a>
+            <a href="#add" class="nav-item">
+                <i class="fas fa-user-plus"></i>
+                <span>Add Client</span>
+            </a>
+            <a href="#stats" class="nav-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Analytics</span>
+            </a>
+        </nav>
 
-       <div class="stat-card paid-stat">
-
-            Paid
-            <span id="paidCount">0</span>
+        <div class="sidebar-footer">
+            <button class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
         </div>
+    </aside>
 
-        <div class="stat-card unpaid-stat">
-            Unpaid
-            <span id="unpaidCount">0</span>
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search clients...">
+                </div>
+                
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40" alt="Admin">
+                    <span>Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-text">
+                    <h1>Welcome back! 👋</h1>
+                    <p>Here's what's happening with your gym today</p>
+                </div>
+                <div class="welcome-date">
+                    <span id="currentDate"></span>
+                </div>
+            </section>
+
+            <!-- Stats Cards -->
+            <section class="stats-grid" id="stats">
+                <div class="stat-card primary">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalCount">0</h3>
+                        <p>Total Clients</p>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+12%</span>
+                    </div>
+                </div>
+
+                <div class="stat-card success">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="paidCount">0</h3>
+                        <p>Active Members</p>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+8%</span>
+                    </div>
+                </div>
+
+                <div class="stat-card warning">
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="unpaidCount">0</h3>
+                        <p>Pending Fees</p>
+                    </div>
+                    <div class="stat-trend down">
+                        <i class="fas fa-arrow-down"></i>
+                        <span>-3%</span>
+                    </div>
+                </div>
+
+                <div class="stat-card danger">
+                    <div class="stat-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="expiredCount">0</h3>
+                        <p>Expired</p>
+                    </div>
+                    <div class="stat-trend down">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+5%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Add Client Section -->
+            <section class="add-client-section" id="add">
+                <div class="section-header">
+                    <h2><i class="fas fa-user-plus"></i> Add New Client</h2>
+                    <button class="collapse-btn" id="collapseForm">
+                        <i class="fas fa-chevron-up"></i>
+                    </button>
+                </div>
+                
+                <div class="form-container" id="formContainer">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="name" placeholder="Enter full name">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <div class="input-icon">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" id="phone" placeholder="Enter phone number">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Join Date</label>
+                            <div class="input-icon">
+                                <i class="fas fa-calendar"></i>
+                                <input type="date" id="joinDate">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Membership Duration</label>
+                            <div class="input-icon">
+                                <i class="fas fa-clock"></i>
+                                <select id="duration">
+                                    <option value="1">1 Month</option>
+                                    <option value="3">3 Months</option>
+                                    <option value="6">6 Months</option>
+                                    <option value="12" selected>1 Year</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Photo Upload -->
+                    <div class="photo-upload-section">
+                        <div class="upload-area" id="uploadArea">
+                            <input type="file" id="photoInput" accept="image/*" hidden>
+                            <div class="upload-placeholder" id="uploadPlaceholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Click or drag photo here</p>
+                                <span>Supports: JPG, PNG (Max 5MB)</span>
+                            </div>
+                            <img id="preview" class="preview-image" hidden>
+                            <button class="remove-photo" id="removePhoto" hidden>
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="camera-option">
+                            <button class="camera-btn" id="cameraBtn">
+                                <i class="fas fa-camera"></i>
+                                Take Photo
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn-secondary" id="clearForm">Clear</button>
+                        <button class="btn-primary" id="addClientBtn">
+                            <i class="fas fa-plus"></i>
+                            Add Client
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Clients List Section -->
+            <section class="clients-section" id="clients">
+                <div class="section-header">
+                    <h2><i class="fas fa-list"></i> Client List</h2>
+                    <div class="filter-tabs">
+                        <button class="tab active" data-filter="all">All</button>
+                        <button class="tab" data-filter="paid">Paid</button>
+                        <button class="tab" data-filter="unpaid">Unpaid</button>
+                        <button class="tab" data-filter="expired">Expired</button>
+                    </div>
+                </div>
+
+                <div class="clients-grid" id="clientGrid">
+                    <!-- Clients will be loaded here -->
+                    <div class="skeleton-loader">
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                    </div>
+                </div>
+
+                <div class="pagination" id="pagination">
+                    <button class="page-btn" id="prevPage"><i class="fas fa-chevron-left"></i></button>
+                    <span class="page-info">Page <span id="currentPage">1</span> of <span id="totalPages">1</span></span>
+                    <button class="page-btn" id="nextPage"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </section>
+
         </div>
+    </main>
 
-        <div class="stat-card expired-stat">
-            Expired
-            <span id="expiredCount">0</span>
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Modal for Client Details -->
+    <div class="modal" id="clientModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamic content -->
+            </div>
         </div>
-    </section>
+    </div>
 
-
-    <!-- ADD CLIENT -->
-    <section class="form-container">
-        <h2>Add Client</h2>
-
-        <input type="text" id="name" placeholder="Enter Name">
-        <input type="text" id="phone" placeholder="Enter Phone">
-        <input type="date" id="joinDate">
-
-        <!-- CAMERA SECTION -->
-        <div class="camera-section">
-            <label class="camera-btn">
-                📸 Take Photo
-                <input type="file" id="photoInput" accept="image/*" capture="environment" hidden>
-            </label>
-            <img id="preview" class="preview-img">
-        </div>
-
-        <button class="add-client" id="addClientBtn">Add Client</button>
-    </section>
-
-
-    <!-- CLIENT LIST -->
-    <section class="client-list-section">
-        <h2>Client List</h2>
-        <div id="clientGrid" class="client-grid"></div>
-    </section>
-
-</div>
-
-<!-- DARK MODE FLOAT BUTTON -->
-<button id="themeToggle" class="theme-btn">🌙</button>
-
-<script src="script.js"></script>
-
+    <script src="script.js"></script>
 </body>
 </html>
