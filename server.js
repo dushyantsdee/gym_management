@@ -14,6 +14,9 @@ require("dotenv").config();
 
 const app = express();
 
+// Express app create karne ke baad, immediately yeh add karo:
+app.set('trust proxy', 1);
+
 /* ---------------- SECURITY MIDDLEWARE ---------------- */
 
 // Helmet for security headers
