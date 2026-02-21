@@ -24,9 +24,10 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:", "http:"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"], // ✅ Fonts add karo
+      scriptSrc: ["'self'", "'unsafe-inline'"],  // ✅ Inline scripts allow karo
+      imgSrc: ["'self'", "data:", "https:", "http:", "blob:"],  // ✅ blob: add karo
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],  // ✅ Fonts
     },
   },
 }));
@@ -93,10 +94,14 @@ app.use(session({
   secret: process.env.SESSION_SECRET || "fallback_secret_change_this",
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI  // MongoDB mein session store karo
+  }),
   cookie: { 
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === 'production' && req.secure, // ✅ Better check
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    sameSite: 'lax',  // ✅ Add this
+    maxAge: 24 * 60 * 60 * 1000
   }
 }));
 app.use(express.static(path.join(__dirname, "public")));
