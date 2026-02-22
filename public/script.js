@@ -216,12 +216,22 @@ async function loadClients() {
         const res = await fetch('/api/clients');
         if (!res.ok) throw new Error('Failed to load clients');
         
-        state.clients = await res.json();
+        const data = await res.json();  // ✅ Pehle data mein lo
+        
+        // ✅ Yeh line change karo:
+        state.clients = data.clients || [];  // Sirf array nikalo, agar nahi hai toh empty array
+        
+        // ✅ Check karo ki array hai
+        if (!Array.isArray(state.clients)) {
+            throw new Error('Invalid data format');
+        }
+        
         updateStats();
         renderClients();
     } catch (err) {
         showToast('Failed to load clients', 'error');
         console.error(err);
+        state.clients = []; // ✅ Error mein empty array set karo
     }
 }
 
