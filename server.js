@@ -276,6 +276,7 @@ app.post("/api/logout", (req, res) => {
         message: "Could not log out" 
       });
     }
+    res.clearCookie('connect.sid')
     res.json({ success: true, message: "Logged out successfully" });
   });
 });

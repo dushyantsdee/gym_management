@@ -47,15 +47,48 @@ const elements = {
 document.addEventListener('DOMContentLoaded', () => {
     init();
 });
-
 function init() {
     setCurrentDate();
     loadTheme();
     setupEventListeners();
+    setupCardActions(); // ✅ Event delegation yahan
     loadClients();
     setupDragAndDrop();
 }
 
+function setupCardActions() {
+    elements.clientGrid.addEventListener('click', (e) => {
+        // Toggle button click
+        const toggleBtn = e.target.closest('.btn-toggle');
+        if (toggleBtn) {
+            e.stopPropagation();
+            toggleFee(toggleBtn.dataset.id);
+            return;
+        }
+        
+        // Renew button click
+        const renewBtn = e.target.closest('.btn-renew');
+        if (renewBtn) {
+            e.stopPropagation();
+            renewClient(renewBtn.dataset.id);
+            return;
+        }
+        
+        // Delete button click
+        const deleteBtn = e.target.closest('.btn-delete');
+        if (deleteBtn) {
+            e.stopPropagation();
+            deleteClient(deleteBtn.dataset.id);
+            return;
+        }
+        
+        // Card click (modal open) - sirf agar button pe click nahi hua
+        const card = e.target.closest('.client-card');
+        if (card && !e.target.closest('button')) {
+            showClientModal(card.dataset.id);
+        }
+    });
+}
 // Set Current Date
 function setCurrentDate() {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -351,26 +384,7 @@ function renderClients() {
     
     elements.clientGrid.innerHTML = paginated.map(client => createClientCard(client)).join('');
     
-    // Attach events
-    document.querySelectorAll('.btn-toggle').forEach(btn => {
-        btn.addEventListener('click', () => toggleFee(btn.dataset.id));
-    });
-    
-    document.querySelectorAll('.btn-renew').forEach(btn => {
-        btn.addEventListener('click', () => renewClient(btn.dataset.id));
-    });
-    
-    document.querySelectorAll('.btn-delete').forEach(btn => {
-        btn.addEventListener('click', () => deleteClient(btn.dataset.id));
-    });
-    
-    document.querySelectorAll('.client-card').forEach(card => {
-        card.addEventListener('click', (e) => {
-            if (!e.target.closest('button')) {
-                showClientModal(card.dataset.id);
-            }
-        });
-    });
+    // ❌ Koi event listener nahi - sab init() mein hai
 }
 
 function createClientCard(client) {
